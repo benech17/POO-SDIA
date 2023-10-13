@@ -50,4 +50,4 @@ make clean
 ```
 
 ## Result of execution : 
-[img_src](./result.png)
+![img_src](./result.png)
