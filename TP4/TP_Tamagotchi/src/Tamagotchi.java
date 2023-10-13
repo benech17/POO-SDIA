@@ -30,24 +30,38 @@ public class Tamagotchi {
         } else {
             stateEmoji = "\uD83C\uDF54";  // 🍔
         }
-        return "Tamagotchi { " + 
-               "State: " + state.getClass().getSimpleName().split("State")[0]+" "+stateEmoji +
-               ", Happiness lvl: " + happinessLevel + 
-               " }";
+        return "Le Tamagotchi est " + state.getClass().getSimpleName().split("State")[0]+" "+stateEmoji +
+               " avec un Happiness lvl de : " + happinessLevel ;
+    }
+
+    public void makeHappy() {
+        state.makeHappy(this);
+    }
+
+    public void makeSad() {
+        state.makeSad(this);
+    }
+
+    public void makeHungry() {
+        state.makeHungry(this);
     }
 
     // Actions Eating
     public void feed() throws IllegalStateException { 
         this.playCountSinceLastMeal = 0;  // Reset play count after feeding
-        if (state instanceof HappyState) {
-            this.happinessLevel ++ ;
-        }
-        if (state instanceof HungryState) {
-            makeHappy();
-        }
-        // modif avec try-catch
-        if (state instanceof SadState) {
-            throw new IllegalStateException("I'm sad, I don't wanna eat :( "); 
+        try {
+            if (state instanceof HappyState) {
+                this.happinessLevel ++ ;
+            }
+            if (state instanceof HungryState) {
+                makeHappy();
+            }
+        
+            if (state instanceof SadState) {
+                throw new IllegalStateException("I'm sad, I don't wanna eat :( "); 
+            }
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());     
         }
     }
 
@@ -68,26 +82,30 @@ public class Tamagotchi {
         } 
     }
    
-    public void playWithOther(Tamagotchi friend){
-        //if (this.state.getClass().getSimpleName().split("State")[0] =="Hungry" || friend.state) 
-    }
+    public void playWith(Tamagotchi otherPet){
+        if (this.state instanceof HungryState || otherPet.state instanceof HungryState) {
+            return;  // If any pet is hungry, they don't play
+        }
 
-    public void ignore() {
-        happinessLevel--;
-        if (happinessLevel <= -2) {
-            makeSad();
+        if (this.state instanceof HappyState) {
+            this.happinessLevel += 4;
+            this.playCountSinceLastMeal++;
+            if (this.playCountSinceLastMeal >= 2) {
+                this.makeHungry();
+            }
+        } else if (this.state instanceof SadState) {
+            this.makeHappy();
+        }
+
+        if (otherPet.state instanceof HappyState) {
+            otherPet.happinessLevel += 4;
+            otherPet.playCountSinceLastMeal++;
+            if (otherPet.playCountSinceLastMeal >= 2) {
+                otherPet.makeHungry();
+            }
+        } else if (otherPet.state instanceof SadState) {
+            otherPet.makeHappy();
         }
     }
 
-    public void makeHappy() {
-        state.makeHappy(this);
-    }
-
-    public void makeSad() {
-        state.makeSad(this);
-    }
-
-    public void makeHungry() {
-        state.makeHungry(this);
-    }
 }
