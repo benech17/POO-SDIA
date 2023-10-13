@@ -13,7 +13,8 @@ compile:
 	$(JAVAC) -d $(BIN_DIR) $(SRC_DIR)/*.java $(TEST_DIR)/*.java
 
 run: compile
-	$(JAVA) -cp $(BIN_DIR) TamagotchiTest
+	$(JAVA) -cp $(BIN_DIR) TamagotchiTest 
+	$(JAVA) -cp $(BIN_DIR) PlaygroundTest 
 
 clean:
 	rm -rf $(BIN_DIR)

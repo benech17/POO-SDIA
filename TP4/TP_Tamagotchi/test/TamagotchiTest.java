@@ -1,10 +1,22 @@
 
 public class TamagotchiTest {
 
+    // variables static pour le nb de test passed or failed
     private static int passedTests = 0;
     private static int failedTests = 0;
 
+    // coloration sortie console
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+
+
     public static void main(String[] args) {
+    
+        /* To test a set of test cases covering all features, 
+        we decided to test each method for the three states, 
+        to be sure of its behaviour.*/
+        
         // test Feed method
         testFeedHappyTamagotchi();
         testFeedSadTamagotchi();
@@ -18,11 +30,16 @@ public class TamagotchiTest {
         // test PlayWith()
         testPlayWithBothHappy();
         testPlayWithOneSad();
-       
 
-        System.out.println("\nTests completed!");
-        System.out.println("Passed: " + passedTests);
-        System.out.println("Failed: " + failedTests);
+        // test Dog and Cat implementation 
+        testDogFeed();
+        testLonelyCatPlayWith();
+
+        System.out.println("\n+------------------ Tests completed ! ------------------+");
+        System.out.println("|"+ANSI_GREEN+"     Passed: " + passedTests +ANSI_RESET+"                                        |");
+        System.out.println("|"+ANSI_RED+"     Failed: " + failedTests +ANSI_RESET+"                                         |");
+        System.out.println("+-------------------------------------------------------+");
+
     }
 
     private static void testFeedHappyTamagotchi() {
@@ -94,12 +111,25 @@ public class TamagotchiTest {
         checkCondition(pet1.toString().contains("Happy") && pet2.getHappinessLevel() == 4, "testPlayWithOneSad");
     }
 
+    private static void testDogFeed() {
+        Dog dog = new Dog();
+        dog.feed();
+        checkCondition(dog.getHappinessLevel() == 6, "testDogFeed"); // 5 + 1 from super.feed()
+    }
+
+    private static void testLonelyCatPlayWith() {
+        LonelyCat lonelyCat = new LonelyCat();
+        Tamagotchi otherPet = new Tamagotchi();
+        lonelyCat.playWith(otherPet);
+        checkCondition(lonelyCat.toString().contains("Sad"), "testLonelyCatPlayWith");
+    }
+
     private static void checkCondition(boolean condition, String testName) {
         if (condition) {
-            System.out.println(testName + " - Passed");
+            System.out.println("  >> "+ANSI_GREEN+testName + " - Passed"+ANSI_RESET);
             passedTests++;
         } else {
-            System.out.println(testName + " - Failed");
+            System.out.println("  >> "+ANSI_RED+ testName + " - Failed"+ANSI_RESET);
             failedTests++;
         }
     }

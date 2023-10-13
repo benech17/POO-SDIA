@@ -1,6 +1,6 @@
 public class Tamagotchi {
     private State state;
-    private int happinessLevel;
+    protected int happinessLevel;
     private int playCountSinceLastMeal;
 
     // constructor
