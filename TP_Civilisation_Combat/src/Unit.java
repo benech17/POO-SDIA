@@ -14,6 +14,9 @@ public abstract class Unit {
         this.defensePower = defensePower;
     }
 
+    public int getHealth() {
+        return health;
+    }
     public int getAttackPower() {
         return attackPower;
     }
@@ -36,6 +39,32 @@ public abstract class Unit {
 
     @Override
     public String toString() {
-        return unitType + "[" + health + "% | "+ experience+ "xp]";
+        return this.unitType + "[" + this.health + "% | "+ this.experience+ "xp]";
+    }
+
+    public void attack(Unit defender,Case attackerCase, Case defenderCase, TerrainType terrain) {
+        // Vérifier si l'unité défensive existe sur la defenderCase
+        if (defenderCase.getUnit() == null) {
+            System.out.println("There's no unit to attack on the target case.");
+            return;  // Sortir de la méthode si l'unité défensive est absente
+        }
+        // Dd = Ap ∗ Atm + Dti
+        int attackDamage = this.attackPower * this.getAttackModifier(defender) + terrain.getAttackModifier(this);
+        // Ad=Dp∗Dtm+Ati
+        int defenseDamage = defender.defensePower * defender.getDefenseModifier(this) + terrain.getDefenseModifier(defender);
+    
+        // Appliquer les dégâts
+        defender.health -= attackDamage;
+        this.health -= defenseDamage;
+    
+        // Vérifier si l'une des unités est éliminée
+        if (defender.health <= 0) {
+            defenderCase.removeUnit(); // L'unité défensive est éliminée
+
+            // Déplacez l'unité attaquante vers la case de l'unité défensive
+            defenderCase.setUnit(this);
+            attackerCase.removeUnit();
+        }
+        // Pour l'unité attaquante, nous aurons besoin de sa case, similaire à defenderCase. Cela pourrait être passé en argument.
     }
 }

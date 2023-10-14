@@ -27,4 +27,8 @@ public class Case {
     public String toString() {
         return unit != null ? unit.toString() : "-----E M P T Y-----";
     }
+
+    public void removeUnit() {
+        this.unit = null;
+    }
 }
