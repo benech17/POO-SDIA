@@ -1,4 +1,3 @@
-
 public class Case {
     private Unit unit;
     private TerrainType terrain;

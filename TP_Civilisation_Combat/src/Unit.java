@@ -34,34 +34,25 @@ public abstract class Unit {
         return 1; // Par défaut, pas de modification. Peut être surchargé par des sous-classes.
     }
 
-    // ... autres méthodes comme attack, defend, isAlive, etc. ...
-
     @Override
     public String toString() {
         return this.unitType + "[" + this.health + "% | "+ this.experience+ "xp]";
     }
 
-    public void attack(Unit defender,Case attackerCase, Case defenderCase, TerrainType terrain) {
+    public void attack(Unit defender, Case attackerCase, Case defenderCase, TerrainType terrain) {
         // Vérifier si l'unité défensive existe sur la defenderCase
         if (defenderCase.getUnit() == null) {
             System.out.println("There's no unit to attack on the target case.");
             return;  // Sortir de la méthode si l'unité défensive est absente
         }
+
+        double[] attackXpModifiers = {1.0, 1.5, 2.0};
+        double[] defenseXpModifiers = {1.0, 1.75, 2.5};
+
+        double attack_xp = attackXpModifiers[this.experience - 1];
+        double defend_xp = defenseXpModifiers[this.experience - 1];
+
         // Dd = Ap ∗ Atm + Dti
-        double attack_xp = 1.0; 
-        if (this.experience == 2){
-            attack_xp=1.5;
-        }else if(this.experience== 3){
-            attack_xp= 2.0;
-        }
-
-        double defend_xp = 1.0; 
-        if (this.experience == 2){
-            defend_xp=1.75;
-        }else if(this.experience == 3){
-            defend_xp= 2.5;
-        }
-
         double attackDamage = this.attackPower*attack_xp* this.getAttackModifier(defender) + terrain.getAttackModifier(this);
         // Ad=Dp∗Dtm+Ati
         double defenseDamage = defender.defensePower*defend_xp * defender.getDefenseModifier(this) + terrain.getDefenseModifier(defender);
@@ -73,11 +64,9 @@ public abstract class Unit {
         // Vérifier si l'une des unités est éliminée
         if (defender.health <= 0) {
             defenderCase.removeUnit(); // L'unité défensive est éliminée
-
             // Déplacez l'unité attaquante vers la case de l'unité défensive
             defenderCase.setUnit(this);
             attackerCase.removeUnit();
         }
-        // Pour l'unité attaquante, nous aurons besoin de sa case, similaire à defenderCase. Cela pourrait être passé en argument.
     }
 }
