@@ -1,4 +1,3 @@
-
 public abstract class Unit {
     private String unitType;
     private int health;
@@ -49,9 +48,23 @@ public abstract class Unit {
             return;  // Sortir de la méthode si l'unité défensive est absente
         }
         // Dd = Ap ∗ Atm + Dti
-        int attackDamage = this.attackPower * this.getAttackModifier(defender) + terrain.getAttackModifier(this);
+        double attack_xp = 1.0; 
+        if (this.experience == 2){
+            attack_xp=1.5;
+        }else if(this.experience== 3){
+            attack_xp= 2.0;
+        }
+
+        double defend_xp = 1.0; 
+        if (this.experience == 2){
+            defend_xp=1.75;
+        }else if(this.experience == 3){
+            defend_xp= 2.5;
+        }
+
+        double attackDamage = this.attackPower*attack_xp* this.getAttackModifier(defender) + terrain.getAttackModifier(this);
         // Ad=Dp∗Dtm+Ati
-        int defenseDamage = defender.defensePower * defender.getDefenseModifier(this) + terrain.getDefenseModifier(defender);
+        double defenseDamage = defender.defensePower*defend_xp * defender.getDefenseModifier(this) + terrain.getDefenseModifier(defender);
     
         // Appliquer les dégâts
         defender.health -= attackDamage;

@@ -1,27 +1,24 @@
-
 # Variables
-JAVAC = javac
-JAVA = java
-SRC_DIR = src
-BIN_DIR = bin
-TEST_DIR = test
-SOURCES = $(wildcard $(SRC_DIR)/*.java)
-TEST_SOURCES = $(wildcard $(TEST_DIR)/*.java)
-CLASSES = $(SOURCES:$(SRC_DIR)/%.java=$(BIN_DIR)/%.class) $(TEST_SOURCES:$(TEST_DIR)/%.java=$(BIN_DIR)/%.class)
+JCC = javac
+JVM = java
+JFLAGS = -g
+BIN = bin
+SRC = src
+TEST = test
 
-# Rules
-all: $(CLASSES)
+# Default rule
+default: compile
 
-$(BIN_DIR)/%.class: $(SRC_DIR)/%.java
-	$(JAVAC) -d $(BIN_DIR) -sourcepath $(SRC_DIR) $<
+# Rule for compiling the classes
+compile: 
+	$(JCC) $(JFLAGS) $(SRC)/*.java -d $(BIN)
+	$(JCC) $(JFLAGS) -cp $(BIN) $(TEST)/*.java -d $(BIN)
 
-$(BIN_DIR)/%.class: $(TEST_DIR)/%.java
-	$(JAVAC) -d $(BIN_DIR) -sourcepath $(SRC_DIR):$(TEST_DIR) $<
+# Rule for running the tests
+run: compile
+	$(JVM) -cp $(BIN) PlaygroundTest
+	$(JVM) -cp $(BIN) CombatTest
 
-run: $(CLASSES)
-	$(JAVA) -cp $(BIN_DIR) Main
-
+# Rule for cleaning up the output
 clean:
-	rm -f $(BIN_DIR)/*.class
-
-.PHONY: all run clean
+	$(RM) $(BIN)/*.class

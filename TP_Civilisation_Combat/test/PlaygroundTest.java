@@ -1,4 +1,4 @@
-public class Main {
+public class PlaygroundTest {
     public static void main(String[] args) {
         /*Grid grid = new Grid(5, 5, TerrainType.FLAT);  // Create a 5x5 grid
         // Crée quelques unités différentes
